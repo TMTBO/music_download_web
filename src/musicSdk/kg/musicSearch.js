@@ -1,5 +1,6 @@
 import request from "@/utils/request";
 import { formatSingerName, decodeName, formatDuration } from "../utils";
+import { getBatchMusicQualityInfo } from "./quality_detail";
 
 export default {
   search,
@@ -42,25 +43,22 @@ export async function search(str, page = 1, limit = 20) {
     }
   });
 
-  // const hashList = items.map((item) => item.FileHash);
-
-  // let qualityInfoMap = {};
-  // try {
-  //   const qualityInfoRequest = getBatchMusicQualityInfo(hashList);
-  //   qualityInfoMap = await qualityInfoRequest.promise;
-  // } catch (error) {
-  //   console.error("Failed to fetch quality info:", error);
-  // }
+  const hashList = items.map((item) => item.FileHash);
+  let qualityInfoMap = {};
+  try {
+    qualityInfoMap = await getBatchMusicQualityInfo(hashList);
+  } catch (error) {
+    console.error("Failed to fetch quality info:", error);
+  }
 
   let list = items.map((item) => {
-    // const { types = [], _types = {} } = qualityInfoMap[item.FileHash] || {};
-
     return {
       id: item.FileHash || "",
       name: decodeName(item.SongName) || "",
       singer: decodeName(formatSingerName(item.Singers, "name")) || "",
       source: "kg",
       interval: formatDuration(item.Duration),
+      qualities: qualityInfoMap[item.FileHash] || {},
       meta: {
         songId: item.FileHash || "",
         albumName: decodeName(item.AlbumName) || "",

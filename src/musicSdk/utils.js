@@ -35,3 +35,13 @@ export const formatDuration = (duration) => {
   const s = sec % 60;
   return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 };
+
+export const formatSize = (size) => {
+  // https://gist.github.com/thomseddon/3511330
+  if (!size) return "0 B";
+  let units = ["B", "KB", "MB", "GB", "TB"];
+  let number = Math.floor(Math.log(size) / Math.log(1024));
+  return `${(size / Math.pow(1024, Math.floor(number))).toFixed(2)} ${
+    units[number]
+  }`;
+};
