@@ -21,7 +21,35 @@
         <div class="music-singer">{{ item.singer }}</div>
         <div class="music-album">{{ item.meta.albumName }}</div>
         <div class="music-duration">{{ item.interval }}</div>
-        <button class="download-btn">下载</button>
+        <div class="music-action" style="position: relative">
+          <div
+            class="download-btn"
+            @mouseenter="showDropdown = item.id"
+            @mouseleave="showDropdown = null"
+          >
+            下载
+            <ul
+              v-if="
+                showDropdown === item.id &&
+                item.qualities &&
+                item.qualities.length
+              "
+              class="quality-dropdown"
+            >
+              <li
+                v-for="q in item.qualities"
+                :key="q.type"
+                class="quality-item"
+                @click.stop="onDownload(item, q)"
+              >
+                {{ q.type }}
+                <span v-if="q.size" style="color: #888; font-size: 12px"
+                  >({{ q.size }})</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
       </li>
     </ul>
     <div v-else class="empty-tip">暂无搜索结果</div>
@@ -55,6 +83,7 @@ export default {
   data() {
     return {
       currentPage: 1,
+      showDropdown: null, // 控制下拉显示
     };
   },
   computed: {
@@ -83,6 +112,10 @@ export default {
         this.currentPage = page;
         this.$emit("page-change", page);
       }
+    },
+    onDownload(item, quality) {
+      // 这里处理下载逻辑
+      alert(`下载: ${item.name} [${quality.label || quality.type}]`);
     },
   },
 };
@@ -120,7 +153,7 @@ export default {
 .music-header .music-action {
   color: #a05eb5;
   font-size: 16px;
-  text-align: inherit; /* 继承各自的 text-align */
+  text-align: left;
 }
 .music-pic {
   width: 48px;
@@ -132,7 +165,7 @@ export default {
 }
 .music-title {
   flex: 2;
-  text-align: center;
+  text-align: left;
 }
 .music-singer,
 .music-album,
@@ -146,6 +179,7 @@ export default {
   flex: none;
   width: 70px;
   text-align: center;
+  position: relative;
 }
 .download-btn {
   flex: none;
@@ -158,8 +192,34 @@ export default {
   cursor: pointer;
   font-size: 14px;
   transition: background 0.2s, color 0.2s;
+  position: relative;
+  user-select: none;
 }
 .download-btn:hover {
+  background: #fa2a55;
+  color: #fff;
+}
+.quality-dropdown {
+  position: absolute;
+  left: 0;
+  top: 110%;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  min-width: 80px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 10;
+  padding: 4px 0;
+}
+.quality-item {
+  padding: 6px 16px;
+  cursor: pointer;
+  color: #fa2a55;
+  font-size: 14px;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.quality-item:hover {
   background: #fa2a55;
   color: #fff;
 }
