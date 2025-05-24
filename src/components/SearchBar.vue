@@ -12,29 +12,29 @@
 
 <script>
 export default {
-  name: 'SearchBar',
+  name: "SearchBar",
   props: {
-    value: String
+    value: String,
   },
   data() {
     return {
-      inputValue: this.value || ''
-    }
+      inputValue: this.value || "",
+    };
   },
   watch: {
     value(val) {
-      this.inputValue = val
-    }
+      this.inputValue = val;
+    },
   },
   methods: {
     handleSearch() {
-      this.$emit('search', this.inputValue)
+      this.$emit("search", this.inputValue);
     },
     updateValue(e) {
-      this.$emit('input', e.target.value)
-    }
-  }
-}
+      this.$emit("input", e.target.value);
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -42,7 +42,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 30px 0;
+  margin: 20px 0;
 }
 
 .search-input {
@@ -53,11 +53,11 @@ export default {
   outline: none;
   font-size: 16px;
   transition: box-shadow 0.2s, border-color 0.2s;
-  box-shadow: 0 2px 8px rgba(250,42,85,0.08);
+  box-shadow: 0 2px 8px rgba(250, 42, 85, 0.08);
 }
 
 .search-input:focus {
-  box-shadow: 0 2px 12px rgba(250,42,85,0.18);
+  box-shadow: 0 2px 12px rgba(250, 42, 85, 0.18);
   border-color: #fa2a55; /* 选中为Apple Music色 */
 }
 
@@ -70,11 +70,11 @@ export default {
   font-size: 16px;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
-  box-shadow: 0 2px 8px rgba(250,42,85,0.08);
+  box-shadow: 0 2px 8px rgba(250, 42, 85, 0.08);
 }
 
 .search-btn:hover {
   background: linear-gradient(90deg, #c471ed 0%, #fa2a55 100%);
-  box-shadow: 0 4px 16px rgba(250,42,85,0.18);
+  box-shadow: 0 4px 16px rgba(250, 42, 85, 0.18);
 }
 </style>

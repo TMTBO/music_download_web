@@ -13,25 +13,25 @@
 
 <script>
 export default {
-  name: 'TabBar',
+  name: "TabBar",
   props: {
     tabs: {
       type: Array,
-      required: true
+      required: true,
     },
     activeTab: {
       type: String,
-      required: true
-    }
-  }
-}
+      required: true,
+    },
+  },
+};
 </script>
 
 <style scoped>
 .tab-bar {
   display: flex;
   justify-content: center;
-  margin: 24px 0 10px 0;
+  margin: 10px 0 10px 0;
   gap: 16px;
 }
 
