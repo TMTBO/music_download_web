@@ -1,13 +1,22 @@
 <template>
   <div>
     <ul v-if="musicList.list && musicList.list.length" class="music-list">
+      <!-- 表头 -->
+      <li class="music-item music-header">
+        <template v-if="pagedList.some((item) => item.meta.picUrl)">
+          <div class="music-pic"></div>
+        </template>
+        <div class="music-title">歌名</div>
+        <div class="music-singer">歌手</div>
+        <div class="music-album">专辑</div>
+        <div class="music-duration">时长</div>
+        <div class="music-action">操作</div>
+      </li>
+      <!-- 列表内容 -->
       <li v-for="item in pagedList" :key="item.id" class="music-item">
-        <img
-          v-if="item.meta.picUrl"
-          :src="item.meta.picUrl"
-          alt="pic"
-          class="music-pic"
-        />
+        <template v-if="item.meta.picUrl">
+          <img :src="item.meta.picUrl" alt="pic" class="music-pic" />
+        </template>
         <div class="music-title">{{ item.name }}</div>
         <div class="music-singer">{{ item.singer }}</div>
         <div class="music-album">{{ item.meta.albumName }}</div>
@@ -94,16 +103,36 @@ export default {
   border-bottom: 1px solid #eee;
   font-size: 16px;
 }
+.music-header {
+  font-weight: bold;
+  background: #faf7fb;
+  color: #a05eb5;
+  border-bottom: 2px solid #e5e0ea;
+  min-height: 32px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+}
+.music-header .music-title,
+.music-header .music-singer,
+.music-header .music-album,
+.music-header .music-duration,
+.music-header .music-action {
+  color: #a05eb5;
+  font-size: 16px;
+  text-align: inherit; /* 继承各自的 text-align */
+}
 .music-pic {
   width: 48px;
   height: 48px;
   object-fit: cover;
   border-radius: 6px;
   margin-right: 12px;
+  flex: none;
 }
 .music-title {
   flex: 2;
-  text-align: left;
+  text-align: center;
 }
 .music-singer,
 .music-album,
@@ -112,6 +141,11 @@ export default {
   text-align: center;
   color: #888;
   font-size: 14px;
+}
+.music-action {
+  flex: none;
+  width: 70px;
+  text-align: center;
 }
 .download-btn {
   flex: none;

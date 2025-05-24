@@ -32,7 +32,7 @@ async function search(str, page = 1, limit = 20) {
       meta: {
         songId: item.MUSICRID || "",
         albumName: item.ALBUM || "",
-        picUrl: item.ALBUMPIC || null,
+        // picUrl: item.ALBUMPIC || null,
       },
     }));
   }

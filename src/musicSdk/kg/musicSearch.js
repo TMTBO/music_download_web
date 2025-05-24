@@ -20,11 +20,13 @@ export async function search(str, page = 1, limit = 20) {
   };
   const res = await request.get("/music/kg/search", { params });
 
+  const rawData = res.data.data;
+
   // 兼容返回数据格式
   let ids = new Set();
   const items = [];
 
-  res.data.data.lists.forEach((item) => {
+  rawData.lists.forEach((item) => {
     const key = item.Audioid + item.FileHash;
     if (!ids.has(key)) {
       ids.add(key);
@@ -40,6 +42,16 @@ export async function search(str, page = 1, limit = 20) {
     }
   });
 
+  // const hashList = items.map((item) => item.FileHash);
+
+  // let qualityInfoMap = {};
+  // try {
+  //   const qualityInfoRequest = getBatchMusicQualityInfo(hashList);
+  //   qualityInfoMap = await qualityInfoRequest.promise;
+  // } catch (error) {
+  //   console.error("Failed to fetch quality info:", error);
+  // }
+
   let list = items.map((item) => {
     // const { types = [], _types = {} } = qualityInfoMap[item.FileHash] || {};
 
@@ -52,24 +64,15 @@ export async function search(str, page = 1, limit = 20) {
       meta: {
         songId: item.FileHash || "",
         albumName: decodeName(item.AlbumName) || "",
-        picUrl: item.Image || null,
+        // picUrl: item.Image || null,
       },
     };
   });
 
   return {
     list,
-    page:
-      res.data && res.data.data && res.data.data.page
-        ? parseInt(res.data.data.page, 10)
-        : page,
-    total:
-      res.data && res.data.data && res.data.data.total
-        ? parseInt(res.data.data.total, 10)
-        : 0,
-    limit:
-      res.data && res.data.data && res.data.data.pagesize
-        ? parseInt(res.data.data.pagesize, 10)
-        : limit,
+    page: rawData.page ? parseInt(rawData.page, 10) : page,
+    total: rawData.total ? parseInt(rawData.total, 10) : 0,
+    limit: rawData.pagesize ? parseInt(rawData.pagesize, 10) : limit,
   };
 }
