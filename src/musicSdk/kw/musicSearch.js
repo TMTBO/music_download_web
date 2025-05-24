@@ -15,7 +15,7 @@ export default {
  */
 async function search(str, page = 1, limit = 20) {
   const params = {
-    keyword: encodeURIComponent(str),
+    keyword: str,
     page: page - 1,
     limit: limit,
   };

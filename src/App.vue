@@ -41,6 +41,14 @@ export default {
       musicList: {},
     };
   },
+  watch: {
+    activeTab() {
+      // 切换tab时自动请求第一页
+      if (this.searchQuery) {
+        this.queryMusicList(1);
+      }
+    },
+  },
   methods: {
     async onSearch(query) {
       this.searchQuery = query;
@@ -59,7 +67,7 @@ export default {
         alert("未找到对应的音乐源");
         return;
       }
-      console.log("query page:", page, "source:", item.name);
+
       try {
         const result = await musicSdk.searchMusic({
           query: this.searchQuery,
@@ -68,7 +76,7 @@ export default {
           limit: 20,
         });
         this.musicList = result;
-        console.log("搜索结果:", this.musicList);
+        console.log("搜索结果:", item.name, this.musicList);
       } catch (e) {
         alert("搜索失败: " + e);
       }
