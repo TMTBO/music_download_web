@@ -59,6 +59,7 @@ export default {
               return {
                 type: type || item[2],
                 size: item[4].toLocaleUpperCase(),
+                format: item[3],
               };
             })
             .filter((item) => item !== null)

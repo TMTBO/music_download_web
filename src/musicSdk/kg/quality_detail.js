@@ -32,6 +32,11 @@ export const getBatchMusicQualityInfo = async (hashList) => {
             type: type,
             hash: quality_data.hash,
             size: formatSize(quality_data.info.filesize),
+            format:
+              quality_data.info.extname &&
+              quality_data.info.extname.trim() !== ""
+                ? quality_data.info.extname
+                : "flac",
           };
         })
         .filter((q) => q !== null);

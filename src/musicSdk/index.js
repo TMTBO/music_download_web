@@ -47,9 +47,27 @@ export default {
     if (!musicId) {
       throw new Error("音乐ID不能为空");
     }
-    return await sources[s].musicURL
-      .getMusicURL(musicId, quality)
-      .catch(() => null);
+
+    let res;
+    if (s === "mobi") {
+      res = await kw.musicURL(musicId, quality);
+    } else {
+      res = await this._getMusicURL(musicId, s, quality);
+    }
+    return Promise.resolve(res)
+      .then((res) => {
+        const rawData = res.data;
+        if (!rawData || !rawData.url) {
+          throw new Error("获取音乐URL失败");
+        }
+        return {
+          url: rawData.url,
+        };
+      })
+      .catch((err) => {
+        console.error("获取音乐URL失败:", err);
+        throw err;
+      });
   },
 
   async downloadMusic({ url, name }) {
@@ -59,6 +77,16 @@ export default {
 
     await request.post("/music/download", { url, name }).then((res) => {
       console.log("下载结果:", res);
+    });
+  },
+
+  async _getMusicURL(musicId, source, quality = "128k") {
+    return request.get("/music/ikun/getMusicURL", {
+      params: {
+        musicId: musicId,
+        source: source,
+        quality: quality,
+      },
     });
   },
 };

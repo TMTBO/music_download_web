@@ -125,14 +125,15 @@ export default {
           source,
           quality: quality.type,
         });
+        console.log("获取下载链接结果", res);
         if (!res || !res.url) throw new Error("未获取到下载链接");
 
-        // 调用 downloadMusic，监听进度
+        const name = `${item.name}-${item.singer}.${quality.format}`;
         await musicSdk.downloadMusic({
           url: res.url,
-          name: `${item.name}-${item.singer}.${res.format}`,
+          name: name,
         });
-        alert("下载完成！");
+        alert(`下载完成: ${name}！`);
       } catch (e) {
         alert("获取下载链接失败: " + (e.message || e));
       }
