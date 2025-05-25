@@ -82,7 +82,7 @@ export default {
     },
     async onDownload(item, quality) {
       try {
-        const source = item.source || "kw";
+        const source = item.source || "mobi";
         const res = await musicSdk.getMusicURL({
           musicId: item.id,
           source,
@@ -93,6 +93,8 @@ export default {
         this.$emit("add-download-task", {
           id: item.id,
           name,
+          quality: quality.type,
+          size: quality.size,
         });
         await musicSdk.downloadMusic({
           url: res.url,

@@ -75,9 +75,11 @@ export default {
       throw new Error("音乐URL不能为空");
     }
 
-    await request.post("/music/download", { url, name }).then((res) => {
-      console.log("下载结果:", res);
-    });
+    await request
+      .post("/music/download", { url, name }, { timeout: 5 * 60 * 1000 })
+      .then((res) => {
+        console.log("下载结果:", res);
+      });
   },
 
   async _getMusicURL(musicId, source, quality = "128k") {

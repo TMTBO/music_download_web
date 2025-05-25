@@ -12,12 +12,29 @@
           :key="item.id"
           class="download-list-item"
         >
-          <span>{{ item.name }}</span>
+          <span>
+            {{ item.name }}
+            <span v-if="item.quality || item.size" class="info">
+              <span v-if="item.quality" class="capsule capsule-quality">{{
+                item.quality
+              }}</span>
+              <span v-if="item.size" class="capsule capsule-size">{{
+                item.size
+              }}</span>
+            </span>
+          </span>
           <span class="progress">
-            <span v-if="item.progress !== undefined && item.progress < 1" class="downloading">
+            <span
+              v-if="item.progress !== undefined && item.progress < 1"
+              class="downloading"
+            >
               <span class="spinner"></span>
             </span>
-            <span v-else-if="item.progress >= 1">完成</span>
+            <span
+              v-else-if="item.progress >= 1"
+              class="finished progress-finished"
+              >完成</span
+            >
             <span v-else>等待中</span>
           </span>
         </li>
@@ -54,60 +71,67 @@ export default {
 }
 .download-list-content {
   background: #fff;
-  border-radius: 8px;
-  min-width: 320px;
-  min-height: 180px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
-  padding: 0 0 16px 0;
+  border-radius: 12px;
+  min-width: 50%;
+  min-height: 50%;
+  max-width: 90vw;
+  max-height: 80vh;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  padding: 0 0 20px 0;
+  overflow: auto;
 }
 .download-list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: bold;
-  font-size: 18px;
-  padding: 16px 24px 8px 24px;
+  font-size: 22px;
+  padding: 24px 36px 12px 36px;
   border-bottom: 1px solid #eee;
 }
 .close-btn {
   background: none;
   border: none;
-  font-size: 22px;
+  font-size: 28px;
   color: #888;
   cursor: pointer;
 }
 .download-list-ul {
   list-style: none;
   margin: 0;
-  padding: 16px 24px 0 24px;
+  padding: 24px 36px 0 36px;
 }
 .download-list-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
+  padding: 14px 0;
   border-bottom: 1px solid #f5f5f5;
-  font-size: 15px;
+  font-size: 17px;
 }
 .download-list-item .progress {
   color: #a05eb5;
-  font-size: 13px;
+  font-size: 15px;
+  min-width: 60px;
+  display: inline-block;
+  text-align: right;
 }
 .empty-tip {
   color: #bbb;
   text-align: center;
-  padding: 32px 0;
+  padding: 48px 0;
+  font-size: 18px;
 }
 .downloading {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 .spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid #a05eb5;
-  border-top: 2px solid #fff;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #a05eb5;
+  border-top: 3px solid #fff;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   display: inline-block;
@@ -116,5 +140,42 @@ export default {
   to {
     transform: rotate(360deg);
   }
+}
+.capsule {
+  display: inline-block;
+  padding: 0 14px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 14px;
+  font-size: 14px;
+  margin-left: 10px;
+  background: #f5f0fa;
+  color: #a05eb5;
+  border: 1.5px solid #e5e0ea;
+  vertical-align: middle;
+}
+.capsule-quality {
+  background: #fae6f6;
+  color: #fa2a55;
+  border: 1.5px solid #fa2a55;
+}
+.capsule-size {
+  background: #eaf6fa;
+  color: #2a8cfa;
+  border: 1.5px solid #2a8cfa;
+}
+/* 圆角美化完成按钮 */
+.progress .finished,
+.progress-finished {
+  display: inline-block;
+  padding: 0 16px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 14px;
+  background: #eafbe7;
+  color: #2bb673;
+  font-size: 15px;
+  border: 1.5px solid #b6e2c7;
+  margin-left: 8px;
 }
 </style>
