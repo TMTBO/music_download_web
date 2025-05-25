@@ -1,56 +1,16 @@
 <template>
   <div>
     <ul v-if="musicList.list && musicList.list.length" class="music-list">
-      <!-- 表头 -->
-      <li class="music-item music-header">
-        <template v-if="pagedList.some((item) => item.meta.picUrl)">
-          <div class="music-pic"></div>
-        </template>
-        <div class="music-title">歌名</div>
-        <div class="music-singer">歌手</div>
-        <div class="music-album">专辑</div>
-        <div class="music-duration">时长</div>
-        <div class="music-action">操作</div>
-      </li>
-      <!-- 列表内容 -->
-      <li v-for="item in pagedList" :key="item.id" class="music-item">
-        <template v-if="item.meta.picUrl">
-          <img :src="item.meta.picUrl" alt="pic" class="music-pic" />
-        </template>
-        <div class="music-title">{{ item.name }}</div>
-        <div class="music-singer">{{ item.singer }}</div>
-        <div class="music-album">{{ item.meta.albumName }}</div>
-        <div class="music-duration">{{ item.interval }}</div>
-        <div class="music-action" style="position: relative">
-          <div
-            class="download-btn"
-            @mouseenter="showDropdown = item.id"
-            @mouseleave="showDropdown = null"
-          >
-            下载
-            <ul
-              v-if="
-                showDropdown === item.id &&
-                item.qualities &&
-                item.qualities.length
-              "
-              class="quality-dropdown"
-            >
-              <li
-                v-for="q in item.qualities"
-                :key="q.type"
-                class="quality-item"
-                @click.stop="onDownload(item, q)"
-              >
-                {{ q.type }}
-                <span v-if="q.size" style="color: #888; font-size: 12px"
-                  >({{ q.size }})</span
-                >
-              </li>
-            </ul>
-          </div>
-        </div>
-      </li>
+      <MusicListHeader :showPic="pagedList.some((item) => item.meta.picUrl)" />
+      <MusicListItem
+        v-for="item in pagedList"
+        :key="item.id"
+        :item="item"
+        @download="onDownload"
+        :showPic="!!item.meta.picUrl"
+        :showDropdown="showDropdown"
+        @show-dropdown="showDropdown = $event"
+      />
     </ul>
     <div v-else class="empty-tip">暂无搜索结果</div>
     <div v-if="musicList.list && musicList.list.length" class="pagination">
@@ -73,9 +33,15 @@
 
 <script>
 import musicSdk from "@/musicSdk/index";
+import MusicListHeader from "./MusicListHeader.vue";
+import MusicListItem from "./MusicListItem.vue";
 
 export default {
   name: "MusicList",
+  components: {
+    MusicListHeader,
+    MusicListItem,
+  },
   props: {
     musicList: {
       type: Object,
@@ -85,7 +51,7 @@ export default {
   data() {
     return {
       currentPage: 1,
-      showDropdown: null, // 控制下拉显示
+      showDropdown: null,
     };
   },
   computed: {
@@ -96,7 +62,6 @@ export default {
       return Math.ceil((this.musicList.total || 0) / this.pageSize) || 1;
     },
     pagedList() {
-      // musicList.list 已经是当前页的数据
       return this.musicList.list || [];
     },
   },
@@ -117,17 +82,13 @@ export default {
     },
     async onDownload(item, quality) {
       try {
-        console.log("开始下载", item, quality);
-
         const source = item.source || "kw";
         const res = await musicSdk.getMusicURL({
           musicId: item.id,
           source,
           quality: quality.type,
         });
-        console.log("获取下载链接结果", res);
         if (!res || !res.url) throw new Error("未获取到下载链接");
-
         const name = `${item.name}-${item.singer}.${quality.format}`;
         await musicSdk.downloadMusic({
           url: res.url,
@@ -148,101 +109,6 @@ export default {
   padding: 0;
   margin: 30px auto 0 auto;
   max-width: 700px;
-}
-.music-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 20px;
-  border-bottom: 1px solid #eee;
-  font-size: 16px;
-}
-.music-header {
-  font-weight: bold;
-  background: #faf7fb;
-  color: #a05eb5;
-  border-bottom: 2px solid #e5e0ea;
-  min-height: 32px;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-}
-.music-header .music-title,
-.music-header .music-singer,
-.music-header .music-album,
-.music-header .music-duration,
-.music-header .music-action {
-  color: #a05eb5;
-  font-size: 16px;
-  text-align: left;
-}
-.music-pic {
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-right: 12px;
-  flex: none;
-}
-.music-title {
-  flex: 2;
-  text-align: left;
-}
-.music-singer,
-.music-album,
-.music-duration {
-  flex: 1;
-  text-align: center;
-  color: #888;
-  font-size: 14px;
-}
-.music-action {
-  flex: none;
-  width: 70px;
-  text-align: center;
-  position: relative;
-}
-.download-btn {
-  flex: none;
-  margin-left: 10px;
-  padding: 4px 12px;
-  border-radius: 4px;
-  border: 1px solid #fa2a55;
-  background: #fff;
-  color: #fa2a55;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.2s, color 0.2s;
-  position: relative;
-  user-select: none;
-}
-.download-btn:hover {
-  background: #fa2a55;
-  color: #fff;
-}
-.quality-dropdown {
-  position: absolute;
-  left: 0;
-  top: 110%;
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 4px;
-  min-width: 80px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  z-index: 10;
-  padding: 4px 0;
-}
-.quality-item {
-  padding: 6px 16px;
-  cursor: pointer;
-  color: #fa2a55;
-  font-size: 14px;
-  white-space: nowrap;
-  transition: background 0.2s;
-}
-.quality-item:hover {
-  background: #fa2a55;
-  color: #fff;
 }
 .empty-tip {
   margin-top: 40px;
