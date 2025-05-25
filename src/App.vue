@@ -10,13 +10,31 @@
         />
       </transition>
       <SearchBar :value="searchQuery" @search="onSearch" />
-      <TabBar
-        :tabs="tabs"
-        :activeTab="activeTab"
-        @update:activeTab="activeTab = $event"
-      />
+      <div class="tabbar-right">
+        <TabBar
+          :tabs="tabs"
+          :activeTab="activeTab"
+          @update:activeTab="activeTab = $event"
+        />
+        <button
+          class="tab-btn download-list-btn"
+          @click="showDownloadList = true"
+        >
+          下载列表
+        </button>
+      </div>
     </div>
-    <MusicList :musicList="musicList" @page-change="onPageChange" />
+    <MusicList
+      :musicList="musicList"
+      @page-change="onPageChange"
+      @add-download-task="addDownloadTask"
+      @finish-download-task="finishDownloadTask"
+    />
+    <DownloadList
+      :show="showDownloadList"
+      :downloadList="downloadList"
+      @close="showDownloadList = false"
+    />
   </div>
 </template>
 
@@ -24,6 +42,7 @@
 import SearchBar from "./components/SearchBar.vue";
 import TabBar from "./components/TabBar.vue";
 import MusicList from "./components/MusicList.vue";
+import DownloadList from "./components/DownloadList.vue";
 import musicSdk from "./musicSdk/index";
 
 export default {
@@ -32,6 +51,7 @@ export default {
     SearchBar,
     TabBar,
     MusicList,
+    DownloadList,
   },
   data() {
     return {
@@ -40,6 +60,8 @@ export default {
       activeTab: musicSdk.sources[0].name,
       musicList: {},
       isSticky: false,
+      showDownloadList: false,
+      downloadList: [],
     };
   },
   watch: {
@@ -94,6 +116,17 @@ export default {
         alert("搜索失败: " + e);
       }
     },
+    addDownloadTask(task) {
+      // 避免重复添加
+      if (!this.downloadList.find((t) => t.id === task.id)) {
+        console.log("添加下载任务:", task);
+        this.downloadList.push({ ...task, progress: 0 });
+      }
+    },
+    finishDownloadTask({ id }) {
+      const task = this.downloadList.find((t) => t.id === id);
+      if (task) task.progress = 1;
+    },
   },
 };
 </script>
@@ -142,5 +175,28 @@ export default {
 .logo-scale-leave-to {
   opacity: 0;
   transform: scale(0.5);
+}
+.tabbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.tab-btn,
+.download-list-btn {
+  padding: 6px 20px;
+  border-radius: 6px;
+  border: 1px solid #a05eb5;
+  background: #fff;
+  color: #a05eb5;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.tab-btn:hover,
+.download-list-btn:hover {
+  background: #a05eb5;
+  color: #fff;
+  border-color: #a05eb5;
 }
 </style>

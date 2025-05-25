@@ -90,11 +90,18 @@ export default {
         });
         if (!res || !res.url) throw new Error("未获取到下载链接");
         const name = `${item.name}-${item.singer}.${quality.format}`;
+        this.$emit("add-download-task", {
+          id: item.id,
+          name,
+        });
         await musicSdk.downloadMusic({
           url: res.url,
           name: name,
         });
-        alert(`下载完成: ${name}！`);
+        this.$emit("finish-download-task", {
+          id: item.id,
+          name,
+        });
       } catch (e) {
         alert("获取下载链接失败: " + (e.message || e));
       }
