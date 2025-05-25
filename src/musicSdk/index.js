@@ -1,6 +1,6 @@
+import request from "@/utils/request";
 import kw from "./kw";
 import kg from "./kg";
-
 const sources = {
   sources: [
     {
@@ -41,5 +41,24 @@ export default {
     return await sources[s].musicSearch
       .search(queryStr.trim(), page, limit)
       .catch(() => null);
+  },
+
+  async getMusicURL({ musicId, source: s, quality = "128k" }) {
+    if (!musicId) {
+      throw new Error("音乐ID不能为空");
+    }
+    return await sources[s].musicURL
+      .getMusicURL(musicId, quality)
+      .catch(() => null);
+  },
+
+  async downloadMusic({ url, name }) {
+    if (!url) {
+      throw new Error("音乐URL不能为空");
+    }
+
+    await request.post("/music/download", { url, name }).then((res) => {
+      console.log("下载结果:", res);
+    });
   },
 };

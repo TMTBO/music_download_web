@@ -72,6 +72,8 @@
 </template>
 
 <script>
+import musicSdk from "@/musicSdk/index";
+
 export default {
   name: "MusicList",
   props: {
@@ -113,9 +115,27 @@ export default {
         this.$emit("page-change", page);
       }
     },
-    onDownload(item, quality) {
-      // 这里处理下载逻辑
-      alert(`下载: ${item.name} [${quality.label || quality.type}]`);
+    async onDownload(item, quality) {
+      try {
+        console.log("开始下载", item, quality);
+
+        const source = item.source || "kw";
+        const res = await musicSdk.getMusicURL({
+          musicId: item.id,
+          source,
+          quality: quality.type,
+        });
+        if (!res || !res.url) throw new Error("未获取到下载链接");
+
+        // 调用 downloadMusic，监听进度
+        await musicSdk.downloadMusic({
+          url: res.url,
+          name: `${item.name}-${item.singer}.${res.format}`,
+        });
+        alert("下载完成！");
+      } catch (e) {
+        alert("获取下载链接失败: " + (e.message || e));
+      }
     },
   },
 };
