@@ -103,12 +103,12 @@ export default {
 .quality-dropdown {
   position: absolute;
   left: 0;
-  top: 110%;
+  top: 105%;
   background: #fff;
   border: 1px solid #eee;
   border-radius: 4px;
   min-width: 80px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   z-index: 10;
   padding: 4px 0;
 }

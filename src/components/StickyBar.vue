@@ -101,7 +101,7 @@ export default {
   color: #a05eb5;
   font-size: 16px;
   cursor: pointer;
-  margin-left: 8px;
+  margin-left: 20px;
   transition: background 0.2s, color 0.2s, border 0.2s;
 }
 .tab-btn:hover,
