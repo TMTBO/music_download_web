@@ -1,6 +1,7 @@
 import request from "@/utils/request";
 import kw from "./kw";
 import kg from "./kg";
+import tx from "./tx";
 const sources = {
   sources: [
     {
@@ -11,10 +12,10 @@ const sources = {
       name: "酷狗音乐",
       id: "kg",
     },
-    // {
-    //   name: "QQ音乐",
-    //   id: "tx",
-    // },
+    {
+      name: "QQ音乐",
+      id: "tx",
+    },
     // {
     //   name: "网易音乐",
     //   id: "wy",
@@ -26,7 +27,7 @@ const sources = {
   ],
   kw,
   kg,
-  //   tx,
+  tx,
   //   wy,
   //   mg,
 };
