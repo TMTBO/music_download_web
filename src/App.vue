@@ -25,7 +25,7 @@
 
 <script setup>
 import StickyBar from "./components/StickyBar.vue";
-import MusicList from "./components/MusicList.vue";
+import MusicList from "./components/MusicList/MusicList.vue";
 import DownloadList from "./components/DownloadList.vue";
 import useAppLogic from "./hooks/useAppLogic";
 
