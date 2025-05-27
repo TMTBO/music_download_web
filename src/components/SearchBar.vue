@@ -15,7 +15,10 @@
     >
       ×
     </button>
-    <button class="search-btn" @click="handleSearch">搜索</button>
+    <button class="search-btn" :disabled="loading" @click="handleSearch">
+      <span v-if="loading" class="spinner"></span>
+      <span v-else>搜索</span>
+    </button>
   </div>
 </template>
 
@@ -28,6 +31,7 @@ export default {
   data() {
     return {
       inputValue: this.value || "",
+      loading: false,
     };
   },
   watch: {
@@ -36,12 +40,18 @@ export default {
     },
   },
   methods: {
-    handleSearch() {
-      this.$emit("search", this.inputValue);
+    async handleSearch() {
+      if (!this.inputValue) return;
+      this.loading = true;
+      this.$emit("search", this.inputValue, this.finishLoading);
     },
     clearInput() {
       this.inputValue = "";
+      this.loading = false;
       this.$emit("search", ""); // 通知父组件清空
+    },
+    finishLoading() {
+      this.loading = false;
     },
   },
 };
@@ -111,5 +121,21 @@ export default {
 .search-btn:hover {
   background: linear-gradient(90deg, #c471ed 0%, #fa2a55 100%);
   box-shadow: 0 4px 16px rgba(250, 42, 85, 0.18);
+}
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid #fff;
+  border-top: 2.5px solid #fa2a55;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 2px;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

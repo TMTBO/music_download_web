@@ -7,12 +7,16 @@
         class="logo"
         :class="{ 'logo-sticky': isSticky }"
       />
-      <SearchBar :value="searchQuery" @search="$emit('search', $event)" />
+      <SearchBar
+        :value="searchQuery"
+        @search="(q, done) => $emit('search', q, done)"
+      />
     </div>
     <div class="tabbar-row">
       <TabBar
         :tabs="tabs"
         :activeTab="activeTab"
+        :loading="tabLoading"
         @update:activeTab="$emit('tab-change', $event)"
       />
       <button
@@ -36,6 +40,7 @@ export default {
     searchQuery: String,
     tabs: Array,
     activeTab: String,
+    tabLoading: Boolean, // 新增
   },
 };
 </script>

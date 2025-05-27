@@ -9,31 +9,45 @@ export default function useAppLogic() {
   const isSticky = ref(false);
   const showDownloadList = ref(false);
   const downloadList = reactive([]);
+  const tabLoading = ref(false); // 新增
 
   function handleScroll() {
-    // 这里假设 stickyBar 用 ref="stickyBar" 绑定在 StickyBar 组件外层
     const stickyBar = document.querySelector(".sticky-bar");
     if (!stickyBar) return;
     const { top } = stickyBar.getBoundingClientRect();
     isSticky.value = top <= 0;
   }
 
-  function onSearch(query) {
+  // 支持 done 回调
+  async function onSearch(query, done) {
     searchQuery.value = query;
     if (!query) {
-      musicList.value = {}; // 清空 musicList
+      musicList.value = {};
+      tabLoading.value = false;
+      done && done();
       return;
     }
-    queryMusicList(1);
+    tabLoading.value = true;
+    try {
+      await queryMusicList(1);
+    } finally {
+      tabLoading.value = false;
+      done && done();
+    }
   }
 
-  function onTabChange(tab) {
+  async function onTabChange(tab) {
     activeTab.value = tab;
-    queryMusicList(1);
+    tabLoading.value = true;
+    try {
+      await queryMusicList(1);
+    } finally {
+      tabLoading.value = false;
+    }
   }
 
   async function onPageChange(page) {
-    queryMusicList(page);
+    await queryMusicList(page);
   }
 
   async function queryMusicList(page = 1) {
@@ -82,6 +96,7 @@ export default function useAppLogic() {
     isSticky,
     showDownloadList,
     downloadList,
+    tabLoading, // 新增
     handleScroll,
     onSearch,
     onTabChange,

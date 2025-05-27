@@ -5,6 +5,7 @@
       :searchQuery="searchQuery"
       :tabs="tabs"
       :activeTab="activeTab"
+      :tabLoading="tabLoading"
       @search="onSearch"
       @tab-change="onTabChange"
       @show-download-list="showDownloadList = true"
@@ -37,6 +38,7 @@ const {
   isSticky,
   showDownloadList,
   downloadList,
+  tabLoading, // 新增
   onSearch,
   onTabChange,
   onPageChange,
