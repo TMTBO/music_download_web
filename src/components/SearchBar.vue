@@ -6,6 +6,15 @@
       placeholder="请输入搜索内容"
       class="search-input"
     />
+    <button
+      v-if="inputValue"
+      class="clear-btn"
+      @click="clearInput"
+      aria-label="清空"
+      title="清空"
+    >
+      ×
+    </button>
     <button class="search-btn" @click="handleSearch">搜索</button>
   </div>
 </template>
@@ -30,8 +39,9 @@ export default {
     handleSearch() {
       this.$emit("search", this.inputValue);
     },
-    updateValue(e) {
-      this.$emit("input", e.target.value);
+    clearInput() {
+      this.inputValue = "";
+      this.$emit("search", ""); // 通知父组件清空
     },
   },
 };
@@ -43,24 +53,50 @@ export default {
   justify-content: center;
   align-items: center;
   margin: 20px 0;
+  position: relative;
 }
-
 .search-input {
   padding: 10px 16px;
   width: 260px;
-  border: 1px solid #ccc; /* 未选中为灰色 */
+  border: 1px solid #ccc;
   border-radius: 24px 0 0 24px;
   outline: none;
   font-size: 16px;
   transition: box-shadow 0.2s, border-color 0.2s;
   box-shadow: 0 2px 8px rgba(250, 42, 85, 0.08);
 }
-
 .search-input:focus {
   box-shadow: 0 2px 12px rgba(250, 42, 85, 0.18);
-  border-color: #fa2a55; /* 选中为Apple Music色 */
+  border-color: #fa2a55;
 }
-
+.clear-btn {
+  position: absolute;
+  right: 90px;
+  background: #f5f5f7; /* 灰色背景 */
+  border: none;
+  color: #fa2a55;
+  font-size: 26px; /* 更大更明显 */
+  cursor: pointer;
+  outline: none;
+  z-index: 2;
+  padding: 0 8px;
+  height: 32px;
+  width: 32px;
+  line-height: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(250, 42, 85, 0.08);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.clear-btn:hover {
+  background: #fa2a55;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(250, 42, 85, 0.18);
+}
 .search-btn {
   padding: 10px 24px;
   border: none;
@@ -72,7 +108,6 @@ export default {
   transition: background 0.2s, box-shadow 0.2s;
   box-shadow: 0 2px 8px rgba(250, 42, 85, 0.08);
 }
-
 .search-btn:hover {
   background: linear-gradient(90deg, #c471ed 0%, #fa2a55 100%);
   box-shadow: 0 4px 16px rgba(250, 42, 85, 0.18);

@@ -20,6 +20,10 @@ export default function useAppLogic() {
 
   function onSearch(query) {
     searchQuery.value = query;
+    if (!query) {
+      musicList.value = {}; // 清空 musicList
+      return;
+    }
     queryMusicList(1);
   }
 
