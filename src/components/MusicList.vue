@@ -10,7 +10,18 @@
         :showPic="!!item.meta.picUrl"
         :showDropdown="showDropdown"
         @show-dropdown="showDropdown = $event"
+        @fly-to-download="flyToDownload"
       />
+      <transition name="fly-download">
+        <MusicListItem
+          v-if="flyAnim.show"
+          :item="flyAnim.item"
+          :showPic="!!flyAnim.item?.meta?.picUrl"
+          :showDropdown="null"
+          class="fly-anim"
+          :style="flyAnim.style"
+        />
+      </transition>
     </ul>
     <div v-else class="empty-tip">暂无搜索结果</div>
     <div v-if="musicList.list && musicList.list.length" class="pagination">
@@ -52,6 +63,11 @@ export default {
     return {
       currentPage: 1,
       showDropdown: null,
+      flyAnim: {
+        show: false,
+        style: {},
+        text: "",
+      },
     };
   },
   computed: {
@@ -108,6 +124,46 @@ export default {
         alert("获取下载链接失败: " + (e.message || e));
       }
     },
+    flyToDownload({ item, rect }) {
+      const targetBtn = document.querySelector(".download-list-btn");
+      if (!targetBtn) return;
+      const targetRect = targetBtn.getBoundingClientRect();
+
+      // 用 music-item 的样式做动画
+      this.flyAnim = {
+        show: true,
+        text: item.name,
+        item,
+        style: {
+          position: "fixed",
+          left: rect.left + "px",
+          top: rect.top + "px",
+          width: rect.width + "px",
+          height: rect.height + "px",
+          zIndex: 9999,
+          transition: "all 2.25s cubic-bezier(.4,2,.6,1)",
+          opacity: 1,
+          transform: "scale(1)",
+          pointerEvents: "none",
+        },
+      };
+
+      setTimeout(() => {
+        this.flyAnim.style = {
+          ...this.flyAnim.style,
+          left: targetRect.left + targetRect.width / 2 + "px",
+          top: targetRect.top - 20 + "px",
+          width: targetRect.width * 0.4 + "px",
+          height: targetRect.height * 0.4 + "px",
+          opacity: 0,
+          transform: "scale(0.5)",
+        };
+      }, 20);
+
+      setTimeout(() => {
+        this.flyAnim.show = false;
+      }, 2250);
+    },
   },
 };
 </script>
@@ -146,5 +202,29 @@ export default {
   border-color: #eee;
   cursor: not-allowed;
   background: #f5f5f7;
+}
+.music-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+  background: #fff;
+}
+.fly-anim {
+  box-shadow: 0 4px 16px rgba(250, 42, 85, 0.18);
+  user-select: none;
+  will-change: left, top, width, height, opacity, transform;
+  pointer-events: none;
+  position: fixed;
+}
+.fly-download-enter-active,
+.fly-download-leave-active {
+  transition: opacity 0.7s;
+}
+.fly-download-enter,
+.fly-download-leave-to {
+  opacity: 0;
 }
 </style>

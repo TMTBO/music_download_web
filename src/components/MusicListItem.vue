@@ -1,5 +1,5 @@
 <template>
-  <li class="music-item">
+  <li class="music-item" ref="musicItem">
     <template v-if="showPic">
       <img :src="item.meta.picUrl" alt="pic" class="music-pic" />
     </template>
@@ -24,7 +24,7 @@
             v-for="q in item.qualities"
             :key="q.type"
             class="quality-item"
-            @click.stop="$emit('download', item, q)"
+            @click.stop="handleQualityClick(q, $event)"
           >
             {{ q.type }}
             <span v-if="q.size" style="color: #888; font-size: 12px"
@@ -36,6 +36,7 @@
     </div>
   </li>
 </template>
+
 <script>
 export default {
   name: "MusicListItem",
@@ -43,6 +44,22 @@ export default {
     item: Object,
     showPic: Boolean,
     showDropdown: [String, Number, null],
+  },
+  methods: {
+    handleQualityClick(q) {
+      // 获取 music-item 的位置信息
+      const rect = this.$refs.musicItem.getBoundingClientRect();
+      this.$emit("fly-to-download", {
+        item: this.item,
+        rect: {
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
+        },
+      });
+      this.$emit("download", this.item, q);
+    },
   },
 };
 </script>
