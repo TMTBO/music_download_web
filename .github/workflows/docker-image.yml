@@ -13,6 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        registry-url: https://npm.pkg.github.com/
+    
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag music_download_web:$(date +%s)
