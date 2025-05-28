@@ -1,7 +1,10 @@
 import axios from "axios";
 
-const serverIp = import.meta.env.SERVER_IP || "127.0.0.1";
-const serverPort = import.meta.env.SERVER_PORT || "80";
+console.log(`Environment Variables ${JSON.stringify(process.env)}`);
+
+const serverIp = process.env.VUE_APP_SERVER_IP;
+const serverPort = process.env.VUE_APP_SERVER_PORT;
+
 const baseURL = `http://${serverIp}:${serverPort}`;
 
 const request = axios.create({

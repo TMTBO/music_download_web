@@ -8,7 +8,6 @@ export default {
   },
   qualityTypes: {
     128: "128k",
-    192: "192k",
     320: "320k",
     2000: "flac",
     4000: "hires",
