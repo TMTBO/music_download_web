@@ -24,7 +24,7 @@ jobs:
           context: .
           file: Dockerfile
           platforms: linux/amd64,linux/arm64
-          outputs: type=docker,dest=music_download_web.tar
+          outputs: type=oci,dest=music_download_web.tar
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
