@@ -27,7 +27,11 @@ jobs:
           context: .
           file: Dockerfile
           platforms: linux/amd64
+          tags: tenma/web_download_web:amd64-${{ github.ref_name }}
           outputs: type=oci,dest=music_download_web_amd64_${{ github.ref_name }}.tar
+
+      - name: Compress amd64 image
+        run: tar -czf music_download_web_amd64_${{ github.ref_name }}.tar.gz music_download_web_amd64_${{ github.ref_name }}.tar
 
       - name: Build Docker image for arm64
         uses: docker/build-push-action@v5
@@ -35,13 +39,17 @@ jobs:
           context: .
           file: Dockerfile
           platforms: linux/arm64
+          tags: tenma/web_download_web:arm64-${{ github.ref_name }}
           outputs: type=oci,dest=music_download_web_arm64_${{ github.ref_name }}.tar
+
+      - name: Compress arm64 image
+        run: tar -czf music_download_web_arm64_${{ github.ref_name }}.tar.gz music_download_web_arm64_${{ github.ref_name }}.tar
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            music_download_web_amd64_${{ github.ref_name }}.tar
-            music_download_web_arm64_${{ github.ref_name }}.tar
+            music_download_web_amd64_${{ github.ref_name }}.tar.gz
+            music_download_web_arm64_${{ github.ref_name }}.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
