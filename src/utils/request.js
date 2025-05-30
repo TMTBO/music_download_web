@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const request = axios.create({
-  baseURL: "/music",
+  baseURL: "/api",
   timeout: 10000,
 });
 
