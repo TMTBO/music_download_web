@@ -30,11 +30,6 @@ import MusicList from "./components/MusicList/MusicList.vue";
 import DownloadList from "./components/DownloadList.vue";
 import useAppLogic from "./hooks/useAppLogic";
 
-window.RUNTIME_CONFIG = {
-  SERVER_IP: "__SERVER_IP__",
-  SERVER_PORT: "__SERVER_PORT__",
-};
-
 const {
   searchQuery,
   tabs,
