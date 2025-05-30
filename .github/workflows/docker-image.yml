@@ -27,7 +27,7 @@ jobs:
           context: .
           file: Dockerfile
           platforms: linux/arm64
-          tags: tenma/web_download_web:latest
+          tags: tenma/music_download_web:latest
           outputs: type=docker,dest=music_download_web_arm64_${{ github.ref_name }}.tar
 
       - name: Create GitHub Release
