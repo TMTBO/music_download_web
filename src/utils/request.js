@@ -1,11 +1,10 @@
 import axios from "axios";
 
-console.log(`Environment Variables ${JSON.stringify(process.env)}`);
-
-const serverIp = process.env.VUE_APP_SERVER_IP;
-const serverPort = process.env.VUE_APP_SERVER_PORT;
-
+const serverIp = window.RUNTIME_CONFIG?.SERVER_IP || "127.0.0.1";
+const serverPort = window.RUNTIME_CONFIG?.SERVER_PORT || "5050";
 const baseURL = `http://${serverIp}:${serverPort}`;
+
+console.log("Base URL for API requests:", baseURL);
 
 const request = axios.create({
   baseURL,
