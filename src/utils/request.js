@@ -5,9 +5,10 @@ const request = axios.create({
 });
 
 request.interceptors.request.use((config) => {
+  const protocol = window.location.protocol === "https:" ? "https" : "http";
   const serverIp = window.RUNTIME_CONFIG?.SERVER_IP || "127.0.0.1";
   const serverPort = window.RUNTIME_CONFIG?.SERVER_PORT || "5050";
-  config.baseURL = `http://${serverIp}:${serverPort}`;
+  config.baseURL = `${protocol}://${serverIp}:${serverPort}`;
   return config;
 });
 
