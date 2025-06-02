@@ -43,12 +43,16 @@ export default {
 
     return await sources[s].musicSearch
       .search(queryStr.trim(), page, limit)
-      .catch(() => null);
+      .catch((err) => {
+        console.error("搜索音乐失败:", err);
+        return Promise.reject(err);
+      });
   },
 
   async getMusicURL({ musicId, source: s, quality = "128k" }) {
     if (!musicId) {
-      throw new Error("音乐ID不能为空");
+      console.error("音乐ID不能为空");
+      return Promise.reject(new Error("音乐ID不能为空"));
     }
 
     let res;
@@ -69,7 +73,7 @@ export default {
       })
       .catch((err) => {
         console.error("获取音乐URL失败:", err);
-        throw err;
+        return Promise.reject(err);
       });
   },
 
@@ -86,12 +90,17 @@ export default {
   },
 
   async _getMusicURL(musicId, source, quality = "128k") {
-    return request.get("/music/ikun/getMusicURL", {
-      params: {
-        musicId: musicId,
-        source: source,
-        quality: quality,
-      },
-    });
+    return request
+      .get("/music/ikun/getMusicURL", {
+        params: {
+          musicId: musicId,
+          source: source,
+          quality: quality,
+        },
+      })
+      .catch((err) => {
+        console.error("获取音乐URL失败:", err);
+        return Promise.reject(err);
+      });
   },
 };
