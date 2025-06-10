@@ -21,6 +21,14 @@
       :downloadList="downloadList"
       @close="showDownloadList = false"
     />
+    <SettingsModal
+      v-if="showSettings"
+      :currentSource="activeSource"
+      :sources="tabs"
+      :storageDir="storageDir"
+      @close="showSettings = false"
+      @change-source="onChangeSource"
+    />
   </div>
 </template>
 
@@ -29,6 +37,7 @@ import StickyBar from "./components/StickyBar.vue";
 import MusicList from "./components/MusicList/MusicList.vue";
 import DownloadList from "./components/DownloadList.vue";
 import useAppLogic from "./hooks/useAppLogic";
+import SettingsModal from "./components/SettingsModal.vue"; // 新建的设置弹窗组件
 
 const {
   searchQuery,
@@ -38,12 +47,15 @@ const {
   isSticky,
   showDownloadList,
   downloadList,
-  tabLoading, // 新增
+  tabLoading,
   onSearch,
   onTabChange,
   onPageChange,
   addDownloadTask,
   finishDownloadTask,
+  onChangeSource,
+  showSettings,
+  activeSource,
 } = useAppLogic();
 </script>
 

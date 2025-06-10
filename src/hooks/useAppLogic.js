@@ -10,11 +10,12 @@ export default function useAppLogic() {
   const showDownloadList = ref(false);
   const downloadList = reactive([]);
   const tabLoading = ref(false); // 新增
+  const showSettings = ref(false);
+  const activeSource = ref(tabs[0]);
 
   function handleScroll() {
     const stickyBar = document.querySelector(".sticky-bar");
     if (!stickyBar) return;
-    const { top } = stickyBar.getBoundingClientRect();
     isSticky.value = top <= 0;
   }
 
@@ -83,6 +84,11 @@ export default function useAppLogic() {
     if (task) task.progress = 1;
   }
 
+  function onChangeSource(source) {
+    activeSource.value = source;
+    // 这里可以触发切换音源的逻辑
+  }
+
   onMounted(() =>
     window.addEventListener("scroll", handleScroll, { passive: true })
   );
@@ -104,5 +110,8 @@ export default function useAppLogic() {
     queryMusicList,
     addDownloadTask,
     finishDownloadTask,
+    onChangeSource,
+    showSettings,
+    activeSource,
   };
 }
