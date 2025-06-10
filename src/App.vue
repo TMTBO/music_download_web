@@ -9,9 +9,11 @@
       @search="onSearch"
       @tab-change="onTabChange"
       @show-download-list="showDownloadList = true"
+      @show-settings="showSettings = true"
     />
     <MusicList
       :musicList="musicList"
+      :activeSource="activeSource"
       @page-change="onPageChange"
       @add-download-task="addDownloadTask"
       @finish-download-task="finishDownloadTask"
@@ -24,7 +26,7 @@
     <SettingsModal
       v-if="showSettings"
       :currentSource="activeSource"
-      :sources="tabs"
+      :sources="source"
       :storageDir="storageDir"
       @close="showSettings = false"
       @change-source="onChangeSource"
@@ -56,6 +58,7 @@ const {
   onChangeSource,
   showSettings,
   activeSource,
+  source,
 } = useAppLogic();
 </script>
 

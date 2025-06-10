@@ -34,10 +34,14 @@ export default function useMusicList(props, emit) {
   async function onDownload(item, quality) {
     try {
       const source = item.source || "mobi";
+      const activeSource = musicSdk.source.find(
+        (sourceItem) => sourceItem.name === props.activeSource
+      ).id;
       const res = await musicSdk.getMusicURL({
         musicId: item.id,
         source,
         quality: quality.type,
+        activeSource: activeSource, // 关键：传递当前激活的源
       });
       if (!res || !res.url) throw new Error("未获取到下载链接");
       const name = `${item.name}-${item.singer}.${quality.format}`;
