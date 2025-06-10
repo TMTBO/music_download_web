@@ -4,6 +4,7 @@ import kg from "./kg";
 import tx from "./tx";
 import mg from "./mg";
 import wy from "./wy";
+import mobi from "./kw/mobi";
 const sources = {
   sources: [
     {
@@ -27,11 +28,16 @@ const sources = {
       id: "mg",
     },
   ],
+  source: [
+    { name: "mobi 音源(酷我破解)", id: "mobi" },
+    { name: "ikun 音源", id: "ikun" },
+  ],
   kw,
   kg,
   tx,
   wy,
   mg,
+  mobi,
 };
 
 export default {
@@ -43,19 +49,26 @@ export default {
 
     return await sources[s].musicSearch
       .search(queryStr.trim(), page, limit)
-      .catch(() => null);
+      .catch((err) => {
+        console.error("搜索音乐失败:", err);
+        return Promise.reject(err);
+      });
   },
 
-  async getMusicURL({ musicId, source: s, quality = "128k" }) {
+  async getMusicURL({ musicId, source: s, quality = "128k", activeSource }) {
     if (!musicId) {
-      throw new Error("音乐ID不能为空");
+      console.error("音乐ID不能为空");
+      return Promise.reject(new Error("音乐ID不能为空"));
     }
 
+    // 判断 activeSource 是否为 mobi
+    const realSource = activeSource === "mobi" ? "mobi" : s;
+
     let res;
-    if (s === "mobi") {
-      res = await kw.musicURL(musicId, quality);
+    if (realSource === "mobi") {
+      res = await mobi.musicURL.getMusicURL(musicId, quality);
     } else {
-      res = await this._getMusicURL(musicId, s, quality);
+      res = await this._getMusicURL(musicId, realSource, quality);
     }
     return Promise.resolve(res)
       .then((res) => {
@@ -69,7 +82,7 @@ export default {
       })
       .catch((err) => {
         console.error("获取音乐URL失败:", err);
-        throw err;
+        return Promise.reject(err);
       });
   },
 
@@ -86,12 +99,17 @@ export default {
   },
 
   async _getMusicURL(musicId, source, quality = "128k") {
-    return request.get("/music/ikun/getMusicURL", {
-      params: {
-        musicId: musicId,
-        source: source,
-        quality: quality,
-      },
-    });
+    return request
+      .get("/music/ikun/getMusicURL", {
+        params: {
+          musicId: musicId,
+          source: source,
+          quality: quality,
+        },
+      })
+      .catch((err) => {
+        console.error("获取音乐URL失败:", err);
+        return Promise.reject(err);
+      });
   },
 };

@@ -52,6 +52,10 @@ export default {
       type: Object,
       required: true,
     },
+    activeSource: {
+      type: String,
+      required: true,
+    },
   },
   setup(props, { emit }) {
     return useMusicList(props, emit);

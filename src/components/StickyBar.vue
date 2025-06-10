@@ -25,6 +25,11 @@
       >
         下载列表
       </button>
+      <button class="settings-btn" @click="$emit('show-settings')">
+        <span class="icon">
+          <img src="../assets/settings.svg" alt="设置" />
+        </span>
+      </button>
     </div>
   </div>
 </template>
@@ -114,5 +119,56 @@ export default {
   background: #a05eb5;
   color: #fff;
   border-color: #a05eb5;
+}
+.settings-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 20px;
+  border-radius: 8px;
+  border: none;
+  background: transparent; /* 移除底色，改为透明 */
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+  outline: none;
+}
+.settings-btn:hover {
+  /* color: #111; */
+  transform: translateY(-1px) scale(1.03);
+}
+.settings-btn:active {
+  transform: scale(0.98);
+}
+.settings-btn .icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ededed; /* 默认更明显的浅灰色圆形背景 */
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(160, 94, 181, 0.08);
+  margin-right: 8px;
+  transition: background 0.2s;
+}
+.settings-btn .icon img {
+  display: none;
+}
+.settings-btn .icon::before {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 24px;
+  mask: url("../assets/settings.svg") no-repeat center/contain;
+  -webkit-mask: url("../assets/settings.svg") no-repeat center/contain;
+  background: #fa2a55;
+  transition: background 0.2s;
+}
+.settings-btn:hover .icon::before {
+  background: #a05eb5;
 }
 </style>

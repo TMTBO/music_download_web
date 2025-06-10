@@ -4,17 +4,25 @@ import musicSdk from "../musicSdk/index";
 export default function useAppLogic() {
   const searchQuery = ref("");
   const tabs = musicSdk.sources.map((item) => item.name);
+  const source = musicSdk.source.map((item) => item.name); // 这里用 id
+
+  // 读取本地存储的音源id
+  const savedSource = localStorage.getItem("activeSource");
+  const activeSource = ref(
+    savedSource && source.includes(savedSource) ? savedSource : source[0]
+  );
+
   const activeTab = ref(musicSdk.sources[0].name);
   const musicList = ref({});
   const isSticky = ref(false);
   const showDownloadList = ref(false);
   const downloadList = reactive([]);
-  const tabLoading = ref(false); // 新增
+  const tabLoading = ref(false);
+  const showSettings = ref(false);
 
   function handleScroll() {
     const stickyBar = document.querySelector(".sticky-bar");
     if (!stickyBar) return;
-    const { top } = stickyBar.getBoundingClientRect();
     isSticky.value = top <= 0;
   }
 
@@ -83,6 +91,11 @@ export default function useAppLogic() {
     if (task) task.progress = 1;
   }
 
+  function onChangeSource(sourceName) {
+    activeSource.value = sourceName;
+    localStorage.setItem("activeSource", sourceName);
+  }
+
   onMounted(() =>
     window.addEventListener("scroll", handleScroll, { passive: true })
   );
@@ -96,7 +109,7 @@ export default function useAppLogic() {
     isSticky,
     showDownloadList,
     downloadList,
-    tabLoading, // 新增
+    tabLoading,
     handleScroll,
     onSearch,
     onTabChange,
@@ -104,5 +117,9 @@ export default function useAppLogic() {
     queryMusicList,
     addDownloadTask,
     finishDownloadTask,
+    onChangeSource,
+    showSettings,
+    activeSource,
+    source,
   };
 }
