@@ -28,11 +28,22 @@ jobs:
           file: Dockerfile
           platforms: linux/arm64
           tags: tenma/music_download_web:latest
-          outputs: type=docker,dest=music_download_web_arm64_${{ github.ref_name }}.tar
+          outputs: type=docker,dest=music_download_web_arm64_latest.tar
+
+      - name: Build Docker image for amd64
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64
+          tags: tenma/music_download_web:latest
+          outputs: type=docker,dest=music_download_web_amd64_latest.tar
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: music_download_web_arm64_${{ github.ref_name }}.tar
+          files: |
+            music_download_web_arm64_latest.tar
+            music_download_web_amd64_latest.tar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
