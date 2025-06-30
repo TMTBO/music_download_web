@@ -19,6 +19,7 @@
           :mini="false"
           :autoplay="true"
           :float="true"
+          :repeat="repeat-all"
           style="width: 320px"
         />
       </div>
