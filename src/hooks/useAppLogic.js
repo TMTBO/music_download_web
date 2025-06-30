@@ -19,6 +19,8 @@ export default function useAppLogic() {
   const downloadList = reactive([]);
   const tabLoading = ref(false);
   const showSettings = ref(false);
+  // 播放器当前音频
+  const currentAudio = ref(null);
 
   function handleScroll() {
     const stickyBar = document.querySelector(".sticky-bar");
@@ -96,6 +98,11 @@ export default function useAppLogic() {
     localStorage.setItem("activeSource", sourceName);
   }
 
+  // 设置当前播放音频
+  function onPlay(audio) {
+    currentAudio.value = audio;
+  }
+
   onMounted(() =>
     window.addEventListener("scroll", handleScroll, { passive: true })
   );
@@ -121,5 +128,7 @@ export default function useAppLogic() {
     showSettings,
     activeSource,
     source,
+    currentAudio,
+    onPlay,
   };
 }

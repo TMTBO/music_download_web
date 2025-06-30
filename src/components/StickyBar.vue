@@ -11,6 +11,17 @@
         :value="searchQuery"
         @search="(q, done) => $emit('search', q, done)"
       />
+      <!-- 播放器浮动在右上角 -->
+      <div class="aplayer-float">
+        <Vue3APlayer
+          v-if="currentAudio"
+          :music="currentAudio"
+          :mini="false"
+          :autoplay="true"
+          :float="true"
+          style="width: 320px"
+        />
+      </div>
     </div>
     <div class="tabbar-row">
       <TabBar
@@ -37,15 +48,21 @@
 <script>
 import SearchBar from "./SearchBar.vue";
 import TabBar from "./TabBar.vue";
+import Vue3APlayer from "vue3-aplayer";
+
 export default {
   name: "StickyBar",
-  components: { SearchBar, TabBar },
+  components: { SearchBar, TabBar, Vue3APlayer },
   props: {
     isSticky: Boolean,
     searchQuery: String,
     tabs: Array,
     activeTab: String,
-    tabLoading: Boolean, // 新增
+    tabLoading: Boolean,
+    currentAudio: {
+      type: [Array, Object],
+      default: () => null,
+    },
   },
 };
 </script>
@@ -69,6 +86,13 @@ export default {
   justify-content: center;
   gap: 18px;
   padding: 12px 0 0 0;
+  position: relative;
+}
+.aplayer-float {
+  position: absolute;
+  right: 32px;
+  top: 0;
+  z-index: 101;
 }
 .tabbar-row {
   width: 100%;

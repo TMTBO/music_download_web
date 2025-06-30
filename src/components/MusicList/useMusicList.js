@@ -33,17 +33,19 @@ export default function useMusicList(props, emit) {
 
   async function onDownload(item, quality) {
     try {
-      const source = item.source || "mobi";
-      const activeSource = musicSdk.source.find(
-        (sourceItem) => sourceItem.name === props.activeSource
-      ).id;
-      const res = await musicSdk.getMusicURL({
-        musicId: item.id,
-        source,
-        quality: quality.type,
-        activeSource: activeSource, // 关键：传递当前激活的源
-      });
-      if (!res || !res.url) throw new Error("未获取到下载链接");
+      // const source = item.source || "mobi";
+      // const activeSource = musicSdk.source.find(
+      //   (sourceItem) => sourceItem.name === props.activeSource
+      // ).id;
+      // const res = await musicSdk.getMusicURL({
+      //   musicId: item.id,
+      //   source,
+      //   quality: quality.type,
+      //   activeSource: activeSource, // 关键：传递当前激活的源
+      // });
+      // if (!res || !res.url) throw new Error("未获取到下载链接");
+
+      const url = await getURL(item, quality);
       const name = `${item.name}-${item.singer}.${quality.format}`;
       emit("add-download-task", {
         id: item.id,
@@ -52,7 +54,7 @@ export default function useMusicList(props, emit) {
         size: quality.size,
       });
       await musicSdk.downloadMusic({
-        url: res.url,
+        url: url,
         name: name,
       });
       emit("finish-download-task", {
@@ -104,6 +106,37 @@ export default function useMusicList(props, emit) {
     }, 650);
   }
 
+  async function getURL(item, quality) {
+    try {
+      const source = item.source || "mobi";
+      const activeSource = musicSdk.source.find(
+        (sourceItem) => sourceItem.name === props.activeSource
+      ).id;
+      const res = await musicSdk.getMusicURL({
+        musicId: item.id,
+        source,
+        quality: quality.type,
+        activeSource: activeSource, // 关键：传递当前激活的源
+      });
+      const url = res && res.url ? res.url : null;
+      if (!url) throw new Error("未获取到下载链接");
+      return url;
+    } catch (e) {
+      alert("获取下载链接失败: " + (e.message || e));
+    }
+  }
+
+  async function onPlay(item) {
+    const url = await getURL(item, item.qualities[item.qualities.length - 1]);
+    const music = {
+      src: url,
+      title: item.name,
+      artist: item.singer,
+      pic: "",
+    };
+    emit("play", music);
+  }
+
   return {
     currentPage,
     showDropdown,
@@ -114,5 +147,6 @@ export default function useMusicList(props, emit) {
     changePage,
     onDownload,
     flyToDownload,
+    onPlay,
   };
 }

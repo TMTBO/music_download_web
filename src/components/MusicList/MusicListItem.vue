@@ -7,7 +7,11 @@
     <div class="music-singer">{{ item.singer }}</div>
     <div class="music-album">{{ item.meta.albumName }}</div>
     <div class="music-duration">{{ item.interval }}</div>
-    <div class="music-action" style="position: relative">
+    <div class="music-action" style="position: relative; display: flex; gap: 6px; justify-content: center;">
+      <!-- 播放按钮 -->
+      <button class="play-btn" @click="$emit('play', item)">
+        ▶
+      </button>
       <div
         class="download-btn"
         @mouseenter="$emit('show-dropdown', item.id)"
@@ -95,13 +99,30 @@ export default {
 }
 .music-action {
   flex: none;
-  width: 70px;
+  width: 90px;
   text-align: center;
   position: relative;
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+.play-btn {
+  border: 1px solid #a05eb5;
+  background: #fff;
+  color: #a05eb5;
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 15px;
+  margin-right: 2px;
+  transition: background 0.2s, color 0.2s;
+}
+.play-btn:hover {
+  background: #a05eb5;
+  color: #fff;
 }
 .download-btn {
   flex: none;
-  margin-left: 10px;
   padding: 4px 12px;
   border-radius: 4px;
   border: 1px solid #fa2a55;

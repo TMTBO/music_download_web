@@ -10,7 +10,9 @@
   "dependencies": {
     "axios": "^1.9.0",
     "core-js": "^3.8.3",
-    "vue": "^3.2.13"
+    "hls.js": "^1.6.5",
+    "vue": "^3.2.13",
+    "vue3-aplayer": "^1.7.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

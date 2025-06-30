@@ -11,6 +11,7 @@
         :showDropdown="showDropdown"
         @show-dropdown="showDropdown = $event"
         @fly-to-download="flyToDownload"
+        @play="onPlay"
       />
       <transition name="fly-download">
         <MusicListItem
