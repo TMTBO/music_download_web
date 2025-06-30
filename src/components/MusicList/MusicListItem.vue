@@ -17,7 +17,7 @@
         @mouseenter="$emit('show-dropdown', item.id)"
         @mouseleave="$emit('show-dropdown', null)"
       >
-        下载
+        <img src="../../assets/download.svg" alt="下载" style="width:18px;height:18px;vertical-align:middle;" />
         <ul
           v-if="
             showDropdown === item.id && item.qualities && item.qualities.length
@@ -123,20 +123,33 @@ export default {
 }
 .download-btn {
   flex: none;
-  padding: 4px 12px;
+  padding: 4px 10px;
   border-radius: 4px;
   border: 1px solid #fa2a55;
   background: #fff;
   color: #fa2a55;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px;
   transition: background 0.2s, color 0.2s;
   position: relative;
   user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.download-btn img {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  filter: invert(36%) sepia(97%) saturate(7492%) hue-rotate(-14deg) brightness(101%) contrast(101%);
+  transition: filter 0.2s;
 }
 .download-btn:hover {
   background: #fa2a55;
   color: #fff;
+}
+.download-btn:hover img {
+  filter: brightness(0) invert(1);
 }
 .quality-dropdown {
   position: absolute;
