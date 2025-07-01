@@ -132,7 +132,7 @@ export default function useMusicList(props, emit) {
       src: url,
       title: item.name,
       artist: item.singer,
-      pic: "",
+      pic: item.meta?.picUrl || "",
     };
     emit("play", music);
   }

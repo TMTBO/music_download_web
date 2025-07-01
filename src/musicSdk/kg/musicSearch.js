@@ -60,8 +60,10 @@ export async function search(str, page = 1, limit = 20) {
       interval: formatDuration(item.Duration),
       qualities: qualityInfoMap[item.FileHash] || {},
       meta: {
-        songId: item.FileHash || "",
+        // kg 音乐下载时用的是FileHash, 而图片下载用的是Audioid, 这时将songId设置为Audioid
+        songId: item.Audioid || "",
         albumName: decodeName(item.AlbumName) || "",
+        albumId: item.AlbumID || null, // 专辑ID
         // picUrl: item.Image || null,
       },
     };

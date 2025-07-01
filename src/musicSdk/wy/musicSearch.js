@@ -35,7 +35,7 @@ export default {
           meta: {
             songId: item.id || "",
             albumName: item.al.name || "",
-            // picUrl: item.ALBUMPIC || null,
+            picUrl: item.al.picUrl || "",
           },
         });
       }

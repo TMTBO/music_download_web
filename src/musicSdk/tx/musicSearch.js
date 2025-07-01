@@ -80,6 +80,13 @@ export default {
             });
           }
 
+          const picUrl =
+            item.album.mid === "" || item.album.mid === "空"
+              ? item.singer?.length
+                ? `https://y.gtimg.cn/music/photo_new/T001R500x500M000${item.singer[0].mid}.jpg`
+                : ""
+              : `https://y.gtimg.cn/music/photo_new/T002R500x500M000${item.album.mid}.jpg`;
+
           return {
             id: item.mid || "",
             name: item.name + (item.title_extra ?? "") || "",
@@ -90,7 +97,7 @@ export default {
             meta: {
               songId: item.id || "",
               albumName: item.album && item.album.name ? item.album.name : "",
-              // picUrl: item.ALBUMPIC || null,
+              picUrl: picUrl || "",
             },
           };
         });

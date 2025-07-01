@@ -1,7 +1,11 @@
 <template>
   <li class="music-item" ref="musicItem">
-    <template v-if="showPic">
-      <img :src="item.meta.picUrl" alt="pic" class="music-pic" />
+    <template v-if="picUrl !== undefined">
+      <img
+        :src="picUrl && picUrl.trim() !== '' ? picUrl : PLACEHOLDER_IMG"
+        alt="pic"
+        class="music-pic"
+      />
     </template>
     <div class="music-title">{{ item.name }}</div>
     <div class="music-singer">{{ item.singer }}</div>
@@ -42,16 +46,40 @@
 </template>
 
 <script>
+import musicSdk from '@/musicSdk';
+
+const PLACEHOLDER_IMG =
+  "data:image/svg+xml;utf8,<svg width='48' height='48' xmlns='http://www.w3.org/2000/svg'><rect width='48' height='48' fill='%23ededed'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23cccccc' font-size='12'>No Img</text></svg>";
+
 export default {
   name: "MusicListItem",
   props: {
     item: Object,
-    showPic: Boolean,
     showDropdown: [String, Number, null],
   },
+  data() {
+    return {
+      picUrl: "",
+      PLACEHOLDER_IMG,
+    };
+  },
+  watch: {
+    item: {
+      immediate: true,
+      deep: true,
+      async handler(newItem) {
+        if (newItem) {
+          this.picUrl = await this.getPicUrl(newItem);
+          console.log("获取音乐封面:", this.picUrl);
+        }
+      },
+    },
+  },
   methods: {
+    async getPicUrl(item) {
+      return await musicSdk.getPicURL(item);
+    },
     handleQualityClick(q) {
-      // 获取 music-item 的位置信息
       const rect = this.$refs.musicItem.getBoundingClientRect();
       this.$emit("fly-to-download", {
         item: this.item,

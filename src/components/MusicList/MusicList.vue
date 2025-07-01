@@ -1,13 +1,12 @@
 <template>
   <div>
     <ul v-if="musicList.list && musicList.list.length" class="music-list">
-      <MusicListHeader :showPic="pagedList.some((item) => item.meta.picUrl)" />
+      <MusicListHeader/>
       <MusicListItem
         v-for="item in pagedList"
         :key="item.id"
         :item="item"
         @download="onDownload"
-        :showPic="!!item.meta.picUrl"
         :showDropdown="showDropdown"
         @show-dropdown="showDropdown = $event"
         @fly-to-download="flyToDownload"
@@ -17,7 +16,6 @@
         <MusicListItem
           v-if="flyAnim.show"
           :item="flyAnim.item"
-          :showPic="!!flyAnim.item?.meta?.picUrl"
           :showDropdown="null"
           class="fly-anim"
           :style="flyAnim.style"

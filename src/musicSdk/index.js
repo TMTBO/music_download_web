@@ -86,6 +86,12 @@ export default {
       });
   },
 
+  async getPicURL(music) {
+    return await sources[music.source].getPic.url(music).catch((err) => {
+      console.error("获取音乐封面失败:", err);
+    });
+  },
+
   async downloadMusic({ url, name }) {
     if (!url) {
       throw new Error("音乐URL不能为空");
